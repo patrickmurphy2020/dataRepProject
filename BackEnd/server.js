@@ -6,6 +6,7 @@ const port = 4000
 const cors = require('cors')
 const mongoose = require('mongoose');
 
+
 app.use(cors());
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -14,6 +15,9 @@ app.use(function (req, res, next) {
         "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
+app.use(express.static(path.join(__dirname, '../build')))
+app.use('/static',express.static(path.join(__dirname, 'build//static')))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -92,6 +96,17 @@ app.put('/list/:id',(req,res)=>{
         })
 })
 
+app.delete('/list/:id',(req,res)=>{
+    console.log("Delete Game: "+req.params.id)
+
+    GameModel.deleteOne({_id: req.params.id},
+        (error,data)=>{
+            if(error)
+                res.send(error)
+            res.send(data)
+        })
+})
+
 app.post('/list', (req, res) => {
     console.log('Recieved')
     console.log(req.body.title)
@@ -116,6 +131,10 @@ app.get('/name', (req, res) => {
 
 app.post('/name', (req, res) => {
     res.send('Hello ' + req.body.fname + ' ' + req.body.lname)
+})
+
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname+'/../build/index.html'))
 })
 
 app.listen(port, () => {
