@@ -19,6 +19,7 @@ app.use(function (req, res, next) {
 app.use(express.static(path.join(__dirname, '../build')))
 app.use('/static',express.static(path.join(__dirname, 'build//static')))
 
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -35,49 +36,23 @@ const Schema = mongoose.Schema;
 const gameSchema = new mongoose.Schema({
     title: String,
     year: String,
-    console: String
+    console: String,
+    image: String,
+    rating: Number
 })
+
 
 const GameModel = mongoose.model("game", gameSchema)
 
-app.get('/', (req, res) => {
-    res.send('Work pls')
-})
-
-app.get('/hello/:name', (req, res) => {
-    console.log(req.params.name)
-    res.send('Hello ' + req.params.name)
-})
 
 app.get('/list', (req, res) => {
-    /* const myGames = [
-         {
-             "Title":"The Legend of Zelda",
-             "Year":"1986",
-             "Console":"NES"
-         },
-         {
-             "Title":"A Link To The Past",
-             "Year":"1991",
-             "Console":"SNES"
-         },
-         {
-             "Title":"Ocarina of Time",
-             "Year":"1998",
-             "Console":"N64"
-         },
-         {
-             "Title":"Wind Waker HD",
-             "Year":"2013",
-             "Console":"Wii U"
-         } 
-     ]*/
     GameModel.find((err, data) => {
         res.json(data)
     })
 
 })
 
+//lists sinle entry searched in url
 app.get('/list/:id',(req,res)=>{
     console.log(req.params.id) 
 
@@ -86,16 +61,19 @@ app.get('/list/:id',(req,res)=>{
     })
 })
 
-app.put('/list/:id',(req,res)=>{
-    console.log("Update Game: "+req.params.id)
+//applies the updates made to the document
+app.put('/list/:id',(req, res)=>{
+    console.log("Updating: " + req.params.id)
     console.log(req.body)
 
-    GameModel.findByIdAndUpdate(req.params.id,req.body,{new:true},
-        (error,data)=>{
-            res.send(data)
+    GameModel.findByIdAndUpdate(req.params.id, req.body, {new:true},
+        (err,data)=>{
+            res.send(data);
         })
+
 })
 
+//deletes entry from mongodb
 app.delete('/list/:id',(req,res)=>{
     console.log("Delete Game: "+req.params.id)
 
@@ -107,6 +85,7 @@ app.delete('/list/:id',(req,res)=>{
         })
 })
 
+//gives a list of the entries
 app.post('/list', (req, res) => {
     console.log('Recieved')
     console.log(req.body.title)
@@ -116,26 +95,28 @@ app.post('/list', (req, res) => {
     GameModel.create({
         title: req.body.title,
         year: req.body.year,
-        console: req.body.console
+        console: req.body.console,
+        image: req.body.image,
+        rating: req.body.rating
+    })
+
+})
+
+//counts number of entries
+app.get('/count', (req, res) => {
+    GameModel.countDocuments((err, data) => {
+        res.json(data)
     })
 
 })
 
 app.get('/test', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
-})
-
-app.get('/name', (req, res) => {
-    res.send('Hello ' + req.query.fname + ' ' + req.query.lname)
-})
-
-app.post('/name', (req, res) => {
-    res.send('Hello ' + req.body.fname + ' ' + req.body.lname)
+ res.sendFile(__dirname + '/index.html')
 })
 
 app.get('*',(req,res)=>{
   res.sendFile(path.join(__dirname+'/../build/index.html'))
-})
+})    
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

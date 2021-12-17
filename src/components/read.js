@@ -35,7 +35,7 @@ export class Read extends React.Component {
     render() {
         return (
             <div>
-                <h1>This is my read component</h1>
+                <h1>Your list is as follows</h1>
                 <Games games={this.state.games} ReloadData={this.ReloadData}></Games>
             </div>
         )

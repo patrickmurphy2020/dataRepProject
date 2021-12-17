@@ -1,8 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
-import {Header} from './components/header'
-import {Footer} from './components/footer'
 import { Content } from './components/content';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import{Navbar, Nav} from 'react-bootstrap'
@@ -21,8 +19,8 @@ class App extends Component {
     <Navbar.Brand href="#home"></Navbar.Brand>
     <Nav className="me-auto">
       <Nav.Link href="/">Home</Nav.Link>
-      <Nav.Link href="/read">Read</Nav.Link>
-      <Nav.Link href="/create">Create</Nav.Link>
+      <Nav.Link href="/read">List of Games</Nav.Link>
+      <Nav.Link href="/create">Add Game to list</Nav.Link>
     </Nav>
   </Navbar>
   <br />

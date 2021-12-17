@@ -24,7 +24,8 @@ export class GameItem extends React.Component{
                 <h4>{this.props.game.title}</h4>
                 <p>{this.props.game.year}</p>
                 <p>{this.props.game.console}</p>
-                <img src={this.props.game.Image}></img>
+                <img src={this.props.game.image}></img>
+                <p>{this.props.game.rating}</p>
                 <br/>
                 <Link to={"/edit/"+this.props.game._id} className="btn btn-primary">Edit</Link>
                 <br/>

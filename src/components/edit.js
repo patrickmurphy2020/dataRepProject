@@ -10,11 +10,15 @@ export class Edit extends React.Component{
         this.onChangeTitle = this.onChangeTitle.bind(this)
         this.onChangeYear = this.onChangeYear.bind(this)
         this.onChangeConsole = this.onChangeConsole.bind(this)
+        this.onChangeImage = this.onChangeImage.bind(this)
+        this.onChangeRating = this.onChangeRating.bind(this)
         
         this.state ={
             Title: '',
             Year: '',
-            Console: ''
+            Console: '',
+            Image:'',
+            Rating:''
         }
     }
 
@@ -24,10 +28,12 @@ export class Edit extends React.Component{
         axios.get("http://localhost:4000/list/"+this.props.match.params.id)
         .then((response)=>{
             this.setState({
-                _id:response.data._id.params,
+                _id:response.data._id,
                 Title:response.data.title,
                 Year:response.data.year,
-                Console:response.data.console
+                Console:response.data.console,
+                Image:response.data.image,
+                Rating:response.data.rating
             })
         })
         .catch((error)=>{
@@ -52,29 +58,36 @@ export class Edit extends React.Component{
             Console:e.target.value
         })
     }
+
+    onChangeImage(e){
+        this.setState({
+            Image:e.target.value
+        })
+    }
+
+    onChangeRating(e){
+        this.setState({
+            Rating:e.target.value
+        })
+    }
     
     onSubmit(e){
         e.preventDefault()
         alert("Name: "+this.state.Title + " Year: "+this.state.Year + " Console: "+this.state.Console)
         
         const newGame = {
+            image:this.state.Image,
             title: this.state.Title,
             year: this.state.Year,
             console: this.state.Console,
-            _id: this.state._id
+            _id: this.state._id,
+            rating: this.state.Rating
         }
         axios.put('http://localhost:4000/list/'+this.state._id,newGame)
         .then(res=>{
             console.log(res.data)
         })
         .catch()
-        /*axios.post('http://localhost:4000/list',newGame)
-        .then((res)=>{
-            console.log(res)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })*/
     }
     render(){
         return(
@@ -102,8 +115,22 @@ export class Edit extends React.Component{
                         onChange={this.onChangeConsole}></input>
                     </div>
                     <div className="form-group">
+                        <label>Image for the game: </label>
+                        <input type='text'
+                        className='form-control'
+                        value={this.state.Image}
+                        onChange={this.onChangeImage}></input>
+                    </div>
+                    <div className="form-group">
+                        <label>Rating of a game from 1-10: </label>
+                        <input type='text'
+                        className='form-control'
+                        value={this.state.Rating}
+                        onChange={this.onChangeRating}></input>
+                    </div>
+                    <div className="form-group">
                          <input type='submit'
-                         value='Add Name'
+                         value='Add New Game'
                          className='btn btn-primary'></input>
                     </div>
                 </form>
